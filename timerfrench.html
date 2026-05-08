@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html>
+<!--  --
+<div id="credits">
+    <style>
+        #credits {
+            position: fixed;
+            inset: 0;
+            background: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            pointer-events: none;
+            font-family: sans-serif;
+            /* 0.5s delay, 6s fade duration */
+            animation: fadeOut 3s ease-in-out 0.25s forwards;
+        }
+        /*  *
+        #credits h3 { 
+            font-size: 12vw; 
+            margin: 0; 
+            text-transform: uppercase;
+        }/*  */
+        @keyframes fadeOut { 
+            to { opacity: 0; visibility: hidden; } 
+        }
+        #creditName {
+            animation: fadeOut 1s ease-in-out 0.5s forwards;
+        }
+    </style>
+
+    <h3 id="creditName">Par Damien</h3>
+
+    <script>
+        window.addEventListener('load', () => {
+
+            setTimeout(() => document.getElementById('creditName').remove(), 2000);
+            // Removes element after total duration (0.25s + 3s)
+            setTimeout(() => document.getElementById('credits').remove(), 3500);
+        });
+    </script>
+</div>
+<!--  -->
+<head>
+<meta charset="UTF-8">
+<title>La Horloge et Minuteur&copy;</title>
+
+<style>
+html, body {
+    margin: 0;
+    height: 100%;
+    font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    color: white;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+/* Two background layers */
+.bg {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    transition: opacity 4s ease-in-out;
+    z-index: -1;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 50%;
+    padding: 50px;/*
+    padding-top: 20px;/*  */
+    width: 100%;
+}
+
+.clock {
+    font-size: 90px;
+    font-weight: 600;
+    text-align: center;
+}
+.iclock {
+    font-size: 90px;
+    font-weight: 600;
+    text-align: center;
+}
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    font-size: 40px;
+    width: 90%;
+}
+
+.blocker {
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background-color:white;
+    color:black;
+    font-weight: 900;
+    font-size: 150px;
+    text-align: center;
+    z-index: 10000;
+    transition: opacity 4s ease-in-out;
+}
+#status {
+    text-align: left;
+    font-size: 30px;
+    width: 220px;
+    position: fixed;
+    top: 100px;
+}
+#status1 {
+    text-align: left;
+    font-size: 30px;
+    width: 220px;
+    position: fixed;
+    top: 200px;
+}
+#o {
+    font-size: 40px;
+    font-weight: 900;
+    /*position: fixed;
+    /*top: 51px;*/
+    /*right: 200%;/*  */
+}
+.bottom-bar {
+    bottom: 0;
+    justify-content: space-between;
+    height: 100px;
+    white-space: nowrap;
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    text-align: center;
+}
+.settings {
+    width: 9%;
+    display: inline-block;
+}
+ispan {
+    font-size: 62px;
+    font-weight: 600;
+}
+h3 {
+    /*padding-top: 25px;*/
+    font-size: 100px;
+    font-weight: bolder;
+}
+
+
+
+
+</style>
+<!-- <script> Below is the Internet status -->
+<script>
+    // Function to update the status display
+    function updateOnlineStatus(event) {
+        var statusElement = document.getElementById("status");
+        if (navigator.onLine) {
+            statusElement.innerHTML = "Connexion au internet";
+        } else {
+            statusElement.innerHTML = "Pas de connexion au internet";
+        }
+    }
+    
+    // Add event listeners for online and offline events
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
+
+    // Initial check when the page loads
+    window.onload = updateOnlineStatus;
+    setInterval(updateOnlineStatus, 1000)
+</script>
+</head>
+<body>
+
+<div id="bg1" class="bg"></div>
+<div id="bg2" class="bg"></div>
+<div class="container" id="default">
+
+
+    <div id="r" class="top-bar">
+        <div id="weather" onclick="window.open('https://www.theweathernetwork.com/en/city/ca/ontario/north-york/current', 'newwindow', 'width=1518px,height=853px'); return false;">Weather: Loading...</div>
+        <!--<div id="o" style="font-weight: 900;">Battery: --%</div><!--  -->
+        <!--<div id="battery" style="z-index: 1000; font-weight: bold;">Battery: --%</div><!--  -->
+    </div>
+
+
+    <div class="clock" id="notClock" style="font-size: 45px;">Minuteur/Horloge</div>
+
+    <div class="iclock" id="clock">00:00:00</div>
+
+    <div class="iclock" id="note"></div>
+    
+    <div class="iclock" id="date">Date</div>
+
+    <div class="clock" id="full" style="font-size: 30px;">Plein Ecran (Fullscreen)</div>
+
+    <div class="clock" id="status"></div>
+
+    <!--<div class="clock" id="status1" onclick='window.location.href = ("file:///media/fuse/drivefs-943af7618645e8e834c8adf41ddd943c/root/Coding/timercommands.html");'>How it works</div>-->
+    
+    
+    <!-- Fixed Section: Ensure everything is INSIDE the bottom-bar div -->
+    <div class="bottom-bar" id="options">
+        <h3 style="margin: 0; font-size: 20px; align-self: center;" id="options2">Les Options (En Minutes)</h3><br>
+        <div id="cl" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; text-align: center; width: 90%">
+                <ispan class="settings" id="o5">5</ispan>
+                <ispan class="settings" id="o10">10</ispan>
+                <ispan class="settings" id="o15">15</ispan>
+                <ispan class="settings" id="o20">20</ispan>
+                <ispan class="settings" id="o25">25</ispan>
+                <ispan class="settings" id="o30">30</ispan>
+                <ispan class="settings" id="o35">35</ispan>
+                <ispan class="settings" id="o40">40</ispan>
+                <ispan class="settings" id="o45">45</ispan>
+                <ispan class="settings" id="o50">50</ispan>
+                
+                <ispan class="settings" id="o55">55</ispan>
+                <ispan class="settings" id="o60">60</ispan>
+                <ispan class="settings" id="o65">65</ispan>
+                <ispan class="settings" id="o70">70</ispan>
+                <ispan class="settings" id="o75">75</ispan>
+                <ispan class="settings" id="o80">80</ispan>
+                <ispan class="settings" id="o85">85</ispan>
+                <ispan class="settings" id="o90">90</ispan>
+                <ispan class="settings" id="o95">95</ispan>
+                <ispan class="settings" id="o100">100</ispan>
+                <ispan class="settings" onclick="specific()">Choisir</ispan>
+                <!--<ispan style="width: 10%;"></ispan><!--  -->
+        </div>
+    </div>
+
+</div>
+
+<!-- Fun Art (Better than the School Curriculum) -->
+
+<!-- 
+
+.                                                                                                                      
+.                                                                                                                      
+.                                                                                                                      
+.                                                                                                                      
+.                             _______  _                                                                                       
+.                            / .     \/ | _       _       _                                                                       
+.                           |__         |   _   _   _   _   _                                                                      
+.                            \_______/\_|     _       _       _                                                                     
+.                                                                                                                      
+-->
+
+<script>
+/* Lag Machine *
+window.open("file:///media/fuse/drivefs-943af7618645e8e834c8adf41ddd943c/root/Coding/timercommands.html", "_blank");
+window.location.reload()/*  */
+let appState = JSON.parse(localStorage.getItem("sys-state")) || { version: "clock" };
+let version = appState.version;
+const all = document.getElementsByClassName("clock")
+const all1 = document.getElementsByClassName("top-bar")
+const all2 = document.getElementsByClassName("bottom-bar")
+let del = "f"
+cl.onclick = () => {
+    pause = "f"
+    fullTimer()
+}
+function fullTimer() {
+    if (version == "timer") {
+        del = "t"
+        Array.from(all).forEach(el => {
+            el.style.display = "none"
+        });
+        Array.from(all1).forEach(el => {
+            el.style.display = "none"
+        });
+        Array.from(all2).forEach(el => {
+            el.style.display = "none"
+        });
+
+        document.getElementById("clock").style.fontSize = "350px"
+        document.getElementById("default").style.padding = "0px"
+        document.getElementById("note").innerText = 
+        `Cliquez sur la minuteur pour rentrer au page des options.`
+        seconds += 1
+        timer()
+    }
+}
+function clean1() {
+    if (del == "f") {
+        document.getElementById("note").innerText = 
+        null;
+    }
+}
+window.addEventListener("keydown", event => {
+    if (event.key === "Escape") {
+        unfulltimer()
+    }
+})
+clock.onclick = () => {
+    unfulltimer()
+}
+
+function unfulltimer() {
+    if (del == "t") {
+        del = "f"
+        document.getElementById("clock").style.fontSize = "90px"
+        document.getElementById("default").style.padding = "50px"
+        Array.from(all).forEach(el => {
+            el.style.display = "block"
+        });
+        Array.from(all1).forEach(el => {
+            el.style.display = "block"
+        });
+        Array.from(all2).forEach(el => {
+            el.style.display = "block"
+        });
+        document.getElementById("note").innerText = 
+        null
+        seconds += 1
+        timer()
+        clean1()
+    }
+    else {
+        fullTimer()
+    }
+}
+
+window.onload = () => {
+    if (version === "timer") {
+        document.getElementById("options").style.display = "block";
+        document.getElementById("options2").style.display = "block";
+        timer();
+    } else {
+        document.getElementById("options").style.display = "none";
+        document.getElementById("options2").style.display = "none";
+        updateClock();
+        updateDate();
+    }
+};
+
+function specific() {
+    let p = prompt("Choisis ton propre nombre pour la minuteur:", "10")
+    if (p){
+        if (p > 1441) {
+            p = 1441
+        }
+        hours = 0
+        //minutes = Number(p);
+        minutes = parseInt(p, 10);
+        seconds = 2
+    }
+}
+
+document.getElementById("options").style.display = "none";
+document.getElementById("options2").style.display = "none";
+
+notClock.onclick = () => {
+    if (version == "clock") {
+        version = "timer";
+        localStorage.setItem("sys-state", JSON.stringify({ version: version }));
+        document.getElementById("options").style.display = "block";
+        document.getElementById("options2").style.display = "block";
+        timer();
+    } else {
+        version = "clock";
+        localStorage.setItem("sys-state", JSON.stringify({ version: version }));
+        document.getElementById("options").style.display = "none";
+        document.getElementById("options2").style.display = "none";
+        updateClock();
+        updateDate();
+    }
+};
+
+function resetTimer() {
+    if (pause == "f") {
+        pause = "t";
+        document.getElementById('clock').innerText = 
+        `Arrêtté`;
+        document.getElementById("date").innerHTML = "<reset type='button' onclick='resetTimer()'>Recommencer la minuteur</reset>";
+    }
+    else {
+        pause = "f";
+        seconds += 1;
+        timer()
+    }
+}
+
+o100.onclick = () => { hours = 0; seconds = 1; minutes = 100; timer(); };
+o95.onclick = () => { hours = 0; seconds = 1; minutes = 95; timer(); };
+o90.onclick = () => { hours = 0; seconds = 1; minutes = 90; timer(); };
+o85.onclick = () => { hours = 0; seconds = 1; minutes = 85; timer(); };
+o80.onclick = () => { hours = 0; seconds = 1; minutes = 80; timer(); };
+o75.onclick = () => { hours = 0; seconds = 1; minutes = 75; timer(); };
+o70.onclick = () => { hours = 0; seconds = 1; minutes = 70; timer(); };
+o65.onclick = () => { hours = 0; seconds = 1; minutes = 65; timer(); };
+o60.onclick = () => { hours = 0; seconds = 1; minutes = 60; timer(); };
+o55.onclick = () => { hours = 0; seconds = 1; minutes = 55; timer(); };
+o50.onclick = () => { hours = 0; seconds = 1; minutes = 50; timer(); };
+o45.onclick = () => { hours = 0; seconds = 1; minutes = 45; timer(); };
+o40.onclick = () => { hours = 0; seconds = 1; minutes = 40; timer(); };
+o35.onclick = () => { hours = 0; seconds = 1; minutes = 35; timer(); };
+o30.onclick = () => { hours = 0; seconds = 1; minutes = 30; timer(); };
+o25.onclick = () => { hours = 0; seconds = 1; minutes = 25; timer(); };
+o20.onclick = () => { hours = 0; seconds = 1; minutes = 20; timer(); };
+o15.onclick = () => { hours = 0; seconds = 1; minutes = 15; timer(); };
+o10.onclick = () => { hours = 0; seconds = 1; minutes = 10; timer(); };
+o5.onclick = () => { hours = 0; seconds = 1; minutes = 5; timer(); };
+
+let seconds = 1;
+let minutes = 45;
+let hours = 0;
+
+function format1() {
+        if (seconds <= 0) {
+            minutes -= 1;
+            seconds = 60;
+        }
+        if (minutes == 0 && hours >= 1) {
+            hours -= 1;
+            minutes = 60;
+        }
+        if (minutes > 61) {
+            minutes -= 60;
+            hours += 1;
+        }
+}
+function format() {
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+    format1()
+}
+let pause = "f"
+
+
+
+function timer() {
+    if (seconds == 0 && minutes == 0 && hours == 0) {
+        document.getElementById("clock").innerText = `Fin!`;
+        document.getElementById("note").innerText = 
+        `Clicker sur "Fin!" pour commencer une autre minuteur.`
+        clean1()
+    } else {
+        if (pause == "f") {
+            format()
+            seconds--;
+            if (version == "timer") {
+                let formattedMinutes = String(minutes).padStart(2, '0');
+                let formattedSeconds = String(seconds).padStart(2, '0');
+                if (del == "f") {
+                    if (hours > 0) {
+                        let formattedHours = String(hours).padStart(2, '0');
+                        document.getElementById("clock").innerText = `Minuteur: ${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+                    }
+                    else {
+                        document.getElementById("clock").innerText = `Minuteur: ${formattedMinutes}:${formattedSeconds}`;
+                    }
+                }
+                else {
+                    if (hours > 0) {
+                        let formattedHours = String(hours).padStart(2, '0');
+                        document.getElementById("clock").innerText = `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+                    }
+                    else {
+                        document.getElementById("clock").innerText = `${formattedMinutes}:${formattedSeconds}`;
+                    }
+                }
+
+
+                //document.getElementById("clock").innerText = `Timer: ${formattedMinutes}:${formattedSeconds}`;
+                document.getElementById("date").innerHTML = "<reset type='button' onclick='resetTimer()'>Arrêtter la minuteur</reset>";
+            }
+        }
+    }
+}
+setInterval(timer, 1000);
+
+function updateClock() {
+    if (version == "clock") {
+        document.getElementById("clock").innerText =
+            new Date().toLocaleTimeString('en-US', {hour:"numeric", minute:"2-digit", second:"2-digit", hour12: true});
+    } /*
+    else {
+        document.getElementById("date").innerText =
+            new Date().toLocaleTimeString('en-US', {hour:"numeric", minute:"2-digit", second:"2-digit", hour12: true});
+    }/*  */
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+function updateDate() {
+    if (version == "clock") {
+        document.getElementById("date").innerText = new Date().toLocaleDateString('en-CA');
+    }
+}
+setInterval(updateDate, 1000);
+updateDate();
+
+document.addEventListener('keydown', function(event) {
+    if (event.key === "a") {
+        window.open('https://docs.google.com/spreadsheets/d/1aD-gkVpsBEiOZ4aVRIVzXktNw1s0KDrk7WIeoUqbh04/edit?gid=0#gid=0', 'newwindow', 'width=4000px,height=2000px'); 
+        return false;
+    }
+});
+
+full.onclick = () => {
+    if(!document.fullscreenElement){
+        document.documentElement.requestFullscreen();
+    } else {
+        document.exitFullscreen();
+    }
+};
+
+const gradients = [
+    "linear-gradient(315deg,#ff0000,#ff8800)",
+    "linear-gradient(315deg,#ff8800,#00cc00)",
+    "linear-gradient(315deg,#00cc00,#00cc00,#4a86e8)",
+    "linear-gradient(315deg,#4a86e8,#4a86e8,#ff00ff)",
+    "linear-gradient(315deg,#ff00ff,#ff0000)"
+];
+
+let index = 0;
+
+const bg1 = document.getElementById("bg1");
+const bg2 = document.getElementById("bg2");
+
+bg1.style.background = gradients[0];
+bg1.style.opacity = 1;
+bg2.style.opacity = 0;
+
+function switchBackground() {
+    const current = index % gradients.length;
+    const next = (index + 1) % gradients.length;
+
+    const topLayer = index % 2 === 0 ? bg2 : bg1;
+    const bottomLayer = index % 2 === 0 ? bg1 : bg2;
+
+    topLayer.style.background = gradients[next];
+    topLayer.style.opacity = 1;
+    bottomLayer.style.opacity = 0;
+
+    index++;
+}
+
+setInterval(switchBackground, 4000);
+
+/* BATTERY */
+/*
+if (navigator.getBattery) {
+    navigator.getBattery().then(battery => {
+        function updateBattery() {
+            const level = Math.round(battery.level * 100);
+            // Show a bolt icon if charging, otherwise just the percentage
+            const chargingIcon = battery.charging ? "⚡" : "";
+            
+            document.getElementById("battery").innerText = 
+                `Battery: ${level}%${chargingIcon}`;
+            if (level <= 25) {
+                document.getElementById('battery').style.color = 'red';
+            }
+            else {
+                if (level <= 55) {
+                    document.getElementById('battery').style.color = 'orange'
+                }
+                else {
+                    if (level <= 90) {
+                        document.getElementById('battery').style.color = 'yellow'
+                    }
+                    else {
+                        document.getElementById('battery').style.color = 'green'
+                    }
+                }
+            }
+            document.getElementById("o").innerText = 
+                `Battery: ${level}%${chargingIcon}`;
+        }
+    
+        updateBattery();
+    
+        battery.addEventListener("chargingchange", updateBattery);
+        battery.addEventListener("levelchange", updateBattery);
+    });
+} else {
+    document.getElementById("battery").innerText = "Battery: N/A";
+}
+/*  */
+/* WEATHER */
+function temp() {
+    fetch("https://api.open-meteo.com/v1/forecast?latitude=43.65&longitude=-79.38&current_weather=true")
+    .then(r => r.json())
+    .then(data => {
+        if (data.current_weather) {
+            document.getElementById("weather").innerText =
+                "Temperature: " + data.current_weather.temperature + "°C";
+        }
+    })
+    .catch(() => {
+        document.getElementById("weather").innerText = "Weather Unavaliable";
+    });
+}
+
+setInterval(temp, 1000)
+temp()
+
+</script>
+
+</body>
+</html>
