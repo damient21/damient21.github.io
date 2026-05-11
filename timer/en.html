@@ -29,8 +29,7 @@ html, body {
     flex-direction: column;
     justify-content: space-between;
     height: 50%;
-    padding: 50px;/*
-    padding-top: 20px;/*  */
+    padding: 50px;
     width: 100%;
 }
 .clock {
@@ -80,9 +79,6 @@ html, body {
 #o {
     font-size: 40px;
     font-weight: 900;
-    /*position: fixed;
-    /*top: 51px;*/
-    /*right: 200%;/*  */
 }
 .bottom-bar {
     bottom: 0;
@@ -143,8 +139,10 @@ h3 {
         <iframe srcdoc="
             <script>
                 const timer = 'https://damient21.github.io/code-editor'
+                const form = 'https://forms.gle/EpWPFVaGmyiDsYWW9'
             </script>
-            <button onclick='window.parent.location.replace(timer)'>To Coding Simulator</button>
+            <button onclick='window.parent.location.replace(timer)'>To Coding Simulator</button><br>
+            <button onclick='window.open(form)'
             " style='width:min-content; height:40px; border:0;'></iframe>
         <!--<div id="o" style="font-weight: 900;">Battery: --%</div><!--  -->
         <!--<div id="battery" style="z-index: 1000; font-weight: bold;">Battery: --%</div><!--  -->
@@ -163,7 +161,6 @@ h3 {
 
     <div class="clock" id="status"></div>
 
-    <!-- Fixed Section: Ensure everything is INSIDE the bottom-bar div -->
     <div class="bottom-bar" id="options">
         <h3 style="margin: 0; font-size: 20px; align-self: center;" id="options2">Timer Settings: (In Minutes)</h3><br>
         <div id="cl" style="display: flex; flex-wrap: wrap; gap: 5px; justify-content: center; text-align: center; width: 90%">
