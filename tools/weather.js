@@ -1,5 +1,5 @@
 /* 
-HTML & CSS Setup:
+HTML & CSS Setup: 
 <style>
   #weather { font-size: 40px; cursor: pointer; }
 </style>
