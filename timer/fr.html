@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <link rel='icon' href='/root/favicon.png'>
 <html>
-<!--  --
+<!--  -->
 <div id="credits">
     <style>
         #credits {
@@ -28,7 +28,7 @@
             to { opacity: 0; visibility: hidden; } 
         }
         #creditName {
-            animation: fadeOut 1s ease-in-out 0.5s forwards;
+            animation: fadeOut 3s ease-in-out 0.5s forwards;
         }
     </style>
 
@@ -37,7 +37,7 @@
     <script>
         window.addEventListener('load', () => {
 
-            setTimeout(() => document.getElementById('creditName').remove(), 2000);
+            setTimeout(() => document.getElementById('creditName').remove(), 3000);
             // Removes element after total duration (0.25s + 3s)
             setTimeout(() => document.getElementById('credits').remove(), 3500);
         });
@@ -201,11 +201,11 @@ h3 {
 
     <div class="iclock" id="clock">00:00:00</div>
 
-    <div class="iclock" id="note"></div>
+    <div class="iclock" id="note" style="60px"></div>
     
     <div class="iclock" id="date">Date</div>
 
-    <div class="clock" id="full" style="font-size: 30px;">Plein Ecran (Fullscreen)</div>
+    <div class="clock" id="full" style="font-size: 45px;">Plein Ecran (Fullscreen)</div>
 
     <div class="clock" id="status"></div>
 
@@ -288,6 +288,8 @@ function fullTimer() {
 
         document.getElementById("clock").style.fontSize = "350px"
         document.getElementById("default").style.padding = "0px"
+        document.getElementById("default").style.paddingTop = "70px"
+        document.documentElement.requestFullscreen()
         document.getElementById("note").innerText = 
         `Cliquez sur la minuteur pour rentrer au page des options.`
         seconds += 1
@@ -326,6 +328,7 @@ function unfulltimer() {
         document.getElementById("note").innerText = 
         null
         seconds += 1
+        document.documentElement.exitFullscreen()
         timer()
         clean1()
     }
@@ -384,7 +387,7 @@ function resetTimer() {
     if (pause == "f") {
         pause = "t";
         document.getElementById('clock').innerText = 
-        `Arrêtté`;
+        'Arrêtté';
         document.getElementById("date").innerHTML = "<reset type='button' onclick='resetTimer()'>Recommencer la minuteur</reset>";
     }
     else {
@@ -467,7 +470,7 @@ function timer() {
     if (seconds == 0 && minutes == 0 && hours == 0) {
         document.getElementById("clock").innerText = `Fin!`;
         document.getElementById("note").innerText = 
-        `Clicker sur "Fin!" pour commencer une autre minuteur.`
+        'Clicker sur "Fin!" pour commencer une autre minuteur.'
         clean1()
     } else {
         if (pause == "f") {
